@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <title>登录页</title>
+    <meta content="" name="keywords"/>
+    <meta content="" name="description"/>
+    <link href="./bootstrap.min.css" rel="stylesheet">
+    <link href="./login.css" rel="stylesheet">
+    <script src="./jquery-3.7.1.min.js"></script>
+    <script src="./bootstrap.min.js"></script>
+</head>
+
+<body style="padding-top: 0px">
+<div class="limiter">
+    <div class="container-login" style="background-image: url('./login-bg.jpg');">
+
+        <div class="wrap-login p-l-55 p-r-55 p-t-65 p-b-54">
+            <form class="login-form validate-form" id="login-form">
+                <span class="login-form-title p-b-49">登录</span>
+
+                <div class="wrap-input validate-input m-b-23" data-validate="请输入用户名">
+                    <span class="label-input">用户名</span>
+                    <input autocomplete="off" class="input" name="account" placeholder="请输入用户名" type="text">
+
+                </div>
+
+                <div class="wrap-input validate-input" data-validate="请输入密码">
+                    <span class="label-input">密码</span>
+                    <input class="input" name="password" placeholder="请输入密码" type="password">
+
+                </div>
+                <div class="wrap-input validate-input" data-validate="请输入验证码">
+                    <span class="label-input" style="display: block;padding-top: 14px">验证码</span>
+                    <input class="input" name="code" placeholder="请输入验证码" style="width: 50%" type="text">
+                    <img id="code" src="./captcha?captchaId=403"
+                         style="cursor: pointer; display: inline-block; vertical-align: middle">
+                    <input name="captchaId" type="hidden">
+                </div>
+
+                <div id="alertPlaceholder">
+
+                </div>
+
+                <div class="container-login-form-btn " style="margin-top: 50px">
+                    <div class="wrap-login-form-btn">
+                        <div class="login-form-bgbtn"></div>
+                        <button class="login-form-btn" type="submit">登 录</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+<script>
+
+    let captchaId = 0;
+
+    function showAlert(message, type) {
+        var alertHtml = `<div class="alert alert-${type} alert-dismissible show" style="margin-bottom: -40px;margin-top: 10px" role="alert">
+                                    ${message}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>`;
+        $('#alertPlaceholder').html(alertHtml);
+    }
+
+    $(document).ready(function () {
+        $('#code').click(function () {
+            captchaId = Math.random();
+            $(this).attr('src', './captcha?captchaId=' + captchaId);
+            $('input[name="captchaId"]').val(captchaId);
+        });
+
+        $('#code').click();
+        $('#login-form').on('submit', function (event) {
+            event.preventDefault();
+
+            var account = $('input[name="account"]').val();
+
+            if (!account) {
+                showAlert('用户名不能为空!', 'danger');
+                return;
+            }
+
+            var password = $('input[name="password"]').val();
+            if (!password) {
+                showAlert('密码不能为空!', 'danger');
+                return;
+            }
+            var code = $('input[name="code"]').val();
+            if (!code) {
+                showAlert('验证码不能为空!', 'danger');
+                return;
+            }
+            var formData = $(this).serialize();
+
+            $.post('./', formData, function (response) {
+
+                window.location.href = '../';
+
+            }).fail(function (response) {
+
+                $('#code').click();
+
+                showAlert(response.responseJSON.message, 'danger');
+            });
+        });
+    });
+
+</script>
