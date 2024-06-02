@@ -14,7 +14,7 @@ public static class DashboardAuthorizationExtension
 {
     public static IServiceCollection AddLogDashboard(this IServiceCollection services,
         Action<PasswordAuthorizationOptions> passwordAuthorizationOptionFunc,
-        Action<DashboardOptions> dashboardOptionFunc = null)
+        Action<DashboardOptions>? dashboardOptionFunc = null)
     {
         var dashboardOptions = new DashboardOptions
         {
@@ -23,14 +23,16 @@ public static class DashboardAuthorizationExtension
                 new PasswordAuthorizationFilter()
             }
         };
-        if (dashboardOptionFunc != null)
-            dashboardOptionFunc(dashboardOptions);
+        dashboardOptionFunc?.Invoke(dashboardOptions);
 
         services.AddSingleton(dashboardOptions);
         var options = new PasswordAuthorizationOptions();
-        if (passwordAuthorizationOptionFunc != null)
-            passwordAuthorizationOptionFunc(options);
 
+
+        passwordAuthorizationOptionFunc(options);
+
+        if (string.IsNullOrWhiteSpace(options.Account)) throw new ArgumentNullException(nameof(options.Account));
+        if (string.IsNullOrWhiteSpace(options.Password)) throw new ArgumentNullException(nameof(options.Password));
 
         services.AddSingleton(options);
 
@@ -54,7 +56,7 @@ public static class DashboardAuthorizationExtension
     public static IApplicationBuilder UseHangfireDashboardWithLogin(
         [NotNull] this IApplicationBuilder app,
         [NotNull] string pathMatch = "/hangfire",
-        [CanBeNull] JobStorage storage = null)
+        [CanBeNull] JobStorage? storage = null)
     {
         if (app == null) throw new ArgumentNullException(nameof(app));
         if (pathMatch == null) throw new ArgumentNullException(nameof(pathMatch));

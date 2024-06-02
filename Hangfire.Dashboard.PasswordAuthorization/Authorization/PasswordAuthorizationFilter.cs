@@ -10,7 +10,7 @@ public class PasswordAuthorizationFilter : AuthorizeAttribute, IDashboardAuthori
     {
         var httpContext = context.GetHttpContext();
 
-        if ((bool)httpContext.User?.Identity?.IsAuthenticated)
+        if (httpContext.User.Identity?.IsAuthenticated ?? false)
         {
             return true;
         }

@@ -25,7 +25,7 @@ public class DashboardAuthorizationMiddleware
 
     public async Task InvokeAsync(HttpContext httpContext)
     {
-        if ((bool)httpContext.User?.Identity?.IsAuthenticated)
+        if (httpContext.User.Identity?.IsAuthenticated ?? false)
         {
             httpContext.Response.StatusCode = 301;
             httpContext.Response.Redirect(DashboardAuthorizationRouteConfig.PathMatch);
@@ -35,7 +35,7 @@ public class DashboardAuthorizationMiddleware
 
         var requestUrl = httpContext.Request.Path.Value;
 
-        if (requestUrl.Contains("css") || requestUrl.Contains("js") || requestUrl.Contains("html") ||
+        if (requestUrl!.Contains("css") || requestUrl.Contains("js") || requestUrl.Contains("html") ||
             requestUrl.Contains("jpg"))
         {
             await DashboardAuthorizationEmbeddedFiles.IncludeEmbeddedFile(httpContext, requestUrl);
@@ -51,7 +51,7 @@ public class DashboardAuthorizationMiddleware
 
             var captcha = scope.ServiceProvider.GetService<ICaptcha>();
 
-            if (!captcha.Validate(captchaId, code))
+            if (!captcha!.Validate(captchaId, code))
             {
                 httpContext.Response.StatusCode = 400;
                 await httpContext.Response.WriteAsJsonAsync(new { code = 401, message = "验证码错误" });
@@ -67,7 +67,7 @@ public class DashboardAuthorizationMiddleware
                 await httpContext.SignInAsync(_options.AuthenticationScheme, new ClaimsPrincipal(
                     new ClaimsIdentity(new List<Claim>
                     {
-                        new(ClaimTypes.Name, account),
+                        new(ClaimTypes.Name, account!),
                         new(ClaimTypes.Role, "job")
                     }, _options.AuthenticationScheme)));
 
