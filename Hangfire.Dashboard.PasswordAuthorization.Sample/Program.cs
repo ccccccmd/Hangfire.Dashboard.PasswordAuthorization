@@ -16,17 +16,17 @@ service.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         options.Cookie.Path = "/";
     });
 
-service.AddAuthorization();
-service.AddHangfire(conf => { conf.UseInMemoryStorage(new InMemoryStorageOptions()); });
-service.AddHangfireServer(option =>
-{
-    option.Queues = new[] { "sample" };
-    option.ServerName = "Sample.Server";
-}).AddLogDashboard(options =>
-{
-    options.Account = "admin";
-    options.Password = "admin";
-});
+service.AddAuthorization()
+    .AddHangfire(conf => { conf.UseInMemoryStorage(new InMemoryStorageOptions()); })
+    .AddHangfireServer(option =>
+    {
+        option.Queues = new[] { "sample" };
+        option.ServerName = "Sample.Server";
+    }).AddLogDashboard(options =>
+    {
+        options.Account = "admin";
+        options.Password = "admin";
+    });
 
 
 var app = builder.Build();
