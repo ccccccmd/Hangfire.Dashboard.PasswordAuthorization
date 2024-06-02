@@ -2,7 +2,7 @@
 
 [![Nuget package](https://img.shields.io/nuget/vpre/UI.Hangfire.Dashboard.PasswordAuthorization)](https://www.nuget.org/packages/UI.Hangfire.Dashboard.PasswordAuthorization/)
 
-This package allows you to protect your Hangfire dashboard with a password. It is useful when you want to protect your Hangfire dashboard from unauthorized access.
+This package allows you to protect your Hangfire dashboard with a password base on asp.net core **cookie authentication**. It is useful when you want to protect your Hangfire dashboard from unauthorized access.
 
 ## Installation
 
@@ -20,7 +20,7 @@ dotnet add package UI.Hangfire.Dashboard.PasswordAuthorization
 
 ## Usage
 
-To enable password protection, you need to add the following code to the `ConfigureServices` method in your `Startup.cs` file:
+To enable password protection, you need to add the following code in your `Program.cs` file:
 
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
@@ -60,6 +60,9 @@ app.Run();
 ```
 
 In the example above, the password is set to `password`. You can change it to any other value.
+
+## Preview
+![preview.png](Hangfire.Dashboard.PasswordAuthorization%2FAssets%2Fpreview.png)
 
 ## Acknowledgments
 

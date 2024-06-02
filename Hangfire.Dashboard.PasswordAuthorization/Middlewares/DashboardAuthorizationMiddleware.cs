@@ -3,6 +3,7 @@ using Hangfire.Dashboard.PasswordAuthorization.EmbeddedFiles;
 using Hangfire.Dashboard.PasswordAuthorization.Options;
 using Lazy.Captcha.Core;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -64,12 +65,12 @@ public class DashboardAuthorizationMiddleware
 
             if (account == _options.Account && password == _options.Password)
             {
-                await httpContext.SignInAsync(_options.AuthenticationScheme, new ClaimsPrincipal(
+                await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(
                     new ClaimsIdentity(new List<Claim>
                     {
                         new(ClaimTypes.Name, account!),
                         new(ClaimTypes.Role, "job")
-                    }, _options.AuthenticationScheme)));
+                    }, CookieAuthenticationDefaults.AuthenticationScheme)));
 
                 httpContext.Response.StatusCode = 200;
                 await httpContext.Response.WriteAsJsonAsync(new { code = 200, message = "登录成功" });

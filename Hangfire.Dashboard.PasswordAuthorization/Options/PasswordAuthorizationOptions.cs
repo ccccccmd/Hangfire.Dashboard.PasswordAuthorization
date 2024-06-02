@@ -6,5 +6,4 @@ public class PasswordAuthorizationOptions
 {
     public string? Account { get; set; }
     public string? Password { get; set; }
-    public string AuthenticationScheme { get; set; } = CookieAuthenticationDefaults.AuthenticationScheme;
 }
